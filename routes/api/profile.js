@@ -240,8 +240,11 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
       .map(item => item.id)
       .indexOf(req.params.exp_id);
 
-    profile.experience.splice(removeIndex, 1);
+    if (removeIndex === -1) {
+      return res.status(404).json({ msg: 'Experience is not found' });
+    }
 
+    profile.experience.splice(removeIndex, 1);
     await profile.save();
     res.json(profile);
   } catch (err) {
@@ -322,6 +325,10 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
     const removeIndex = profile.education
       .map(item => item.id)
       .indexOf(req.params.edu_id);
+
+    if (removeIndex === -1) {
+      return res.status(404).json({ msg: 'Education is not found' });
+    }
 
     profile.education.splice(removeIndex, 1);
 
